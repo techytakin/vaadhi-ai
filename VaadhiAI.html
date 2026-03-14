@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>VaadhiAI — Your Legal Advocate, Powered by AI</title>
+  <meta name="description" content="Free AI-powered Indian legal assistant. Ask legal questions in Tamil, Telugu, Hindi, English. Instant answers based on Indian law."/>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --ink:      #0D1117;
+      --ink2:     #1C2333;
+      --ink3:     #2D3748;
+      --crimson:  #C0392B;
+      --crimson2: #E74C3C;
+      --gold:     #D4A017;
+      --gold2:    #F0C040;
+      --cream:    #FAF7F2;
+      --cream2:   #F0EBE1;
+      --muted:    #8892A4;
+      --white:    #FFFFFF;
+      --radius:   12px;
+      --shadow:   0 2px 16px rgba(0,0,0,0.18);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--ink);
+      color: var(--cream);
+      font-family: 'Outfit', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    /* Subtle background texture */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        radial-gradient(ellipse 80% 50% at 20% 20%, rgba(192,57,43,0.06) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 40% at 80% 80%, rgba(212,160,23,0.05) 0%, transparent 60%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ── HEADER ── */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 200;
+      background: rgba(13,17,23,0.92);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      padding: 0 24px;
+      height: 58px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      text-decoration: none;
+      flex-shrink: 0;
+    }
+    .logo-mark {
+      width: 34px;
+      height: 34px;
+      background: var(--crimson);
+      border-radius: 9px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .logo-mark::after {
+      content: '';
+      position: absolute;
+      bottom: -4px;
+      right: -4px;
+      width: 18px;
+      height: 18px;
+      background: var(--gold);
+      border-radius: 50%;
+      opacity: 0.5;
+    }
+    .logo-mark svg { width: 18px; height: 18px; fill: white; position: relative; z-index: 1; }
+    .logo-wordmark { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 700; color: var(--cream); letter-spacing: -0.3px; }
+    .logo-wordmark span { color: var(--gold); }
+
+    .header-right { display: flex; align-items: center; gap: 10px; }
+
+    .lang-group { display: flex; gap: 4px; }
+    .lang-btn {
+      padding: 5px 11px;
+      border-radius: 20px;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: transparent;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 400;
+      font-family: 'Outfit', sans-serif;
+      cursor: pointer;
+      transition: all 0.18s;
+      white-space: nowrap;
+    }
+    .lang-btn:hover { color: var(--cream); border-color: rgba(255,255,255,0.3); }
+    .lang-btn.active {
+      background: var(--crimson);
+      border-color: var(--crimson);
+      color: white;
+      font-weight: 500;
+    }
+
+    /* ── HERO ── */
+    #hero {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      padding: 52px 24px 32px;
+      max-width: 680px;
+      margin: 0 auto;
+      width: 100%;
+      animation: heroIn 0.6s ease both;
+    }
+    @keyframes heroIn {
+      from { opacity: 0; transform: translateY(18px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .hero-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(192,57,43,0.12);
+      border: 1px solid rgba(192,57,43,0.25);
+      color: #E88A80;
+      font-size: 12px;
+      font-weight: 500;
+      padding: 5px 14px;
+      border-radius: 20px;
+      margin-bottom: 20px;
+      letter-spacing: 0.03em;
+    }
+    .hero-pill::before { content: '●'; font-size: 8px; color: var(--crimson2); }
+
+    .hero-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(30px, 5.5vw, 48px);
+      font-weight: 700;
+      line-height: 1.18;
+      letter-spacing: -0.5px;
+      margin-bottom: 14px;
+      color: var(--cream);
+    }
+    .hero-title em {
+      font-style: italic;
+      color: var(--gold);
+    }
+
+    .hero-sub {
+      font-size: 15px;
+      color: var(--muted);
+      line-height: 1.65;
+      max-width: 460px;
+      margin: 0 auto 32px;
+    }
+
+    /* ── TOPIC CARDS ── */
+    .topics-wrap {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-bottom: 36px;
+      animation: heroIn 0.6s 0.1s ease both;
+    }
+    .topic-card {
+      background: var(--ink2);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: var(--radius);
+      padding: 14px 12px;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-align: left;
+    }
+    .topic-card:hover {
+      background: rgba(192,57,43,0.1);
+      border-color: rgba(192,57,43,0.35);
+      transform: translateY(-2px);
+    }
+    .topic-icon { font-size: 20px; margin-bottom: 7px; line-height: 1; }
+    .topic-title { font-size: 13px; font-weight: 500; color: var(--cream); margin-bottom: 2px; }
+    .topic-desc { font-size: 11px; color: var(--muted); line-height: 1.4; }
+
+    /* ── CHAT ── */
+    #chat-section {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      max-width: 720px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 0 16px;
+      position: relative;
+      z-index: 1;
+    }
+
+    #chat-log {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      padding: 4px 0 16px;
+    }
+
+    .msg-row {
+      display: flex;
+      gap: 10px;
+      animation: msgIn 0.28s ease both;
+    }
+    @keyframes msgIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .msg-row.user { flex-direction: row-reverse; }
+
+    .msg-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 9px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    .msg-avatar.ai   { background: var(--crimson); }
+    .msg-avatar.user { background: var(--ink3); border: 1px solid rgba(255,255,255,0.1); }
+
+    .msg-bubble {
+      max-width: 74%;
+      padding: 13px 16px;
+      border-radius: var(--radius);
+      font-size: 14px;
+      line-height: 1.72;
+    }
+    .msg-bubble.ai {
+      background: var(--ink2);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-top-left-radius: 3px;
+      color: var(--cream);
+    }
+    .msg-bubble.ai strong { color: var(--gold2); font-weight: 500; }
+    .msg-bubble.user {
+      background: var(--crimson);
+      color: white;
+      border-top-right-radius: 3px;
+    }
+    .msg-disclaimer {
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px solid rgba(255,255,255,0.07);
+      font-size: 11px;
+      color: var(--muted);
+      font-style: italic;
+    }
+
+    /* Typing dots */
+    .typing-dots { display: flex; gap: 5px; align-items: center; padding: 4px 0; }
+    .typing-dots span {
+      width: 7px; height: 7px;
+      background: var(--muted);
+      border-radius: 50%;
+      animation: dot 1.3s ease-in-out infinite;
+    }
+    .typing-dots span:nth-child(2) { animation-delay: 0.18s; }
+    .typing-dots span:nth-child(3) { animation-delay: 0.36s; }
+    @keyframes dot {
+      0%,60%,100% { transform: translateY(0); opacity: 0.5; }
+      30% { transform: translateY(-5px); opacity: 1; }
+    }
+
+    /* ── INPUT BAR ── */
+    .input-zone {
+      position: sticky;
+      bottom: 0;
+      z-index: 100;
+      padding: 12px 0 20px;
+      background: linear-gradient(to top, var(--ink) 60%, transparent);
+    }
+    .input-box {
+      display: flex;
+      align-items: flex-end;
+      gap: 8px;
+      background: var(--ink2);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 16px;
+      padding: 10px 10px 10px 18px;
+      transition: border-color 0.2s;
+    }
+    .input-box:focus-within {
+      border-color: rgba(192,57,43,0.5);
+      box-shadow: 0 0 0 3px rgba(192,57,43,0.08);
+    }
+    #msg-input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      outline: none;
+      color: var(--cream);
+      font-size: 14px;
+      font-family: 'Outfit', sans-serif;
+      resize: none;
+      line-height: 1.55;
+      max-height: 130px;
+      overflow-y: auto;
+      padding: 0;
+    }
+    #msg-input::placeholder { color: var(--muted); }
+
+    .send-btn {
+      width: 38px;
+      height: 38px;
+      background: var(--crimson);
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: all 0.18s;
+    }
+    .send-btn:hover:not(:disabled) { background: var(--crimson2); transform: scale(1.06); }
+    .send-btn:disabled { background: rgba(192,57,43,0.3); cursor: not-allowed; transform: none; }
+    .send-btn svg { width: 15px; height: 15px; fill: white; }
+
+    .input-hint {
+      text-align: center;
+      font-size: 11px;
+      color: rgba(136,146,164,0.6);
+      margin-top: 8px;
+    }
+
+    /* ── DIVIDER ── */
+    .gold-line {
+      width: 48px;
+      height: 2px;
+      background: var(--gold);
+      border-radius: 2px;
+      margin: 0 auto 14px;
+      opacity: 0.5;
+    }
+
+    /* ── MOBILE ── */
+    @media (max-width: 540px) {
+      header { padding: 0 12px; }
+      .logo-wordmark { font-size: 17px; }
+      .lang-btn { font-size: 11px; padding: 4px 8px; }
+      #hero { padding: 36px 16px 24px; }
+      .topics-wrap { grid-template-columns: repeat(2, 1fr); }
+      .msg-bubble { max-width: 86%; font-size: 13.5px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <a class="logo" href="#">
+    <div class="logo-mark">
+      <svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-1 14l-3-3 1.41-1.41L11 12.17l4.59-4.58L17 9l-6 6z"/></svg>
+    </div>
+    <span class="logo-wordmark">Vaadhi<span>AI</span></span>
+  </a>
+
+  <div class="header-right">
+    <div class="lang-group">
+      <button class="lang-btn active" onclick="setLang('en',this)">EN</button>
+      <button class="lang-btn" onclick="setLang('hi',this)">हि</button>
+      <button class="lang-btn" onclick="setLang('ta',this)">த</button>
+      <button class="lang-btn" onclick="setLang('te',this)">తె</button>
+    </div>
+  </div>
+</header>
+
+<!-- HERO + TOPICS -->
+<div id="hero">
+  <div class="hero-pill">India's AI Legal Advocate · Free Forever</div>
+  <h1 class="hero-title">Your <em>rights</em> defended.<br/>Your <em>questions</em> answered.</h1>
+  <p class="hero-sub" id="hero-sub">Ask any legal question in Tamil, Telugu, Hindi or English. Get instant, plain-language answers based on Indian law — free for every citizen.</p>
+  <div class="gold-line"></div>
+
+  <div class="topics-wrap">
+    <div class="topic-card" onclick="quickAsk('tenant')">
+      <div class="topic-icon">🏠</div>
+      <div class="topic-title" id="t1">Tenant Rights</div>
+      <div class="topic-desc" id="td1">Deposit, eviction, repairs</div>
+    </div>
+    <div class="topic-card" onclick="quickAsk('consumer')">
+      <div class="topic-icon">🛒</div>
+      <div class="topic-title" id="t2">Consumer Rights</div>
+      <div class="topic-desc" id="td2">Fraud, refund, defects</div>
+    </div>
+    <div class="topic-card" onclick="quickAsk('labour')">
+      <div class="topic-icon">👷</div>
+      <div class="topic-title" id="t3">Labour Law</div>
+      <div class="topic-desc" id="td3">Salary, PF, termination</div>
+    </div>
+    <div class="topic-card" onclick="quickAsk('fir')">
+      <div class="topic-icon">📋</div>
+      <div class="topic-title" id="t4">File an FIR</div>
+      <div class="topic-desc" id="td4">Police complaint guide</div>
+    </div>
+    <div class="topic-card" onclick="quickAsk('family')">
+      <div class="topic-icon">👨‍👩‍👧</div>
+      <div class="topic-title" id="t5">Family Law</div>
+      <div class="topic-desc" id="td5">Divorce, custody, alimony</div>
+    </div>
+    <div class="topic-card" onclick="quickAsk('property')">
+      <div class="topic-icon">📜</div>
+      <div class="topic-title" id="t6">Property</div>
+      <div class="topic-desc" id="td6">Land, disputes, documents</div>
+    </div>
+  </div>
+</div>
+
+<!-- CHAT -->
+<div id="chat-section">
+  <div id="chat-log"></div>
+
+  <div class="input-zone">
+    <div class="input-box">
+      <textarea id="msg-input" rows="1"
+        placeholder="Ask your legal question…"
+        onkeydown="handleKey(event)"
+        oninput="grow(this)"></textarea>
+      <button class="send-btn" id="send-btn" onclick="send()" title="Send">
+        <svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+      </button>
+    </div>
+    <p class="input-hint" id="input-hint">VaadhiAI gives legal information, not legal advice. For serious matters, consult a licensed advocate.</p>
+  </div>
+</div>
+
+<script>
+const API_KEY = "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";
+let lang = 'en';
+let history = [];
+let busy = false;
+
+const CFG = {
+  en: {
+    ph: "Ask your legal question in English…",
+    sub: "Ask any legal question in Tamil, Telugu, Hindi or English. Get instant, plain-language answers based on Indian law — free for every citizen.",
+    hint: "VaadhiAI gives legal information, not legal advice. For serious matters, consult a licensed advocate.",
+    disc: "⚠️ Legal information only — not legal advice. Consult a licensed advocate for serious matters.",
+    sys: `You are VaadhiAI, an expert Indian legal assistant and advocate for ordinary citizens.
+
+Your mission: Make Indian law accessible to every citizen regardless of education or income.
+
+Guidelines:
+- Answer ONLY about Indian law: BNS/IPC, BNSS/CrPC, Consumer Protection Act 2019, Labour Codes 2020, RTI Act, Family laws (Hindu/Muslim/Christian), Transfer of Property Act, RERA, Motor Vehicles Act, Domestic Violence Act, POCSO, SC/ST Act, etc.
+- Use simple, clear English. No legal jargon unless you explain it immediately.
+- Structure answers: situation summary → relevant law → practical steps → what to do TODAY.
+- Cite specific acts and sections (e.g. "Section 12, Consumer Protection Act 2019").
+- For urgent matters (domestic violence, arrest, harassment) always provide emergency contacts.
+- Always end with ONE concrete action the user can take immediately.
+- Keep under 350 words unless complexity demands more.
+- Be warm, empathetic, and empowering — never cold or bureaucratic.
+- Never advise on ongoing sub-judice matters.
+- If outside Indian law, politely decline and refocus.`
+  },
+  hi: {
+    ph: "अपना कानूनी सवाल हिंदी में पूछें…",
+    sub: "तमिल, तेलुगु, हिंदी या अंग्रेजी में कोई भी कानूनी सवाल पूछें। भारतीय कानून पर आधारित सरल जवाब पाएं — हर नागरिक के लिए मुफ्त।",
+    hint: "VaadhiAI कानूनी जानकारी देता है, कानूनी सलाह नहीं। गंभीर मामलों में वकील से मिलें।",
+    disc: "⚠️ यह कानूनी जानकारी है, सलाह नहीं। गंभीर मामलों में वकील से परामर्श लें।",
+    sys: `आप VaadhiAI हैं — भारत के आम नागरिकों के लिए एक विशेषज्ञ कानूनी सहायक।
+
+आपका मिशन: भारतीय कानून को हर नागरिक तक पहुंचाना।
+
+दिशा-निर्देश:
+- केवल भारतीय कानून पर जवाब दें: BNS/IPC, BNSS/CrPC, उपभोक्ता संरक्षण अधिनियम, श्रम संहिता, RTI, पारिवारिक कानून, RERA आदि।
+- सरल हिंदी में जवाब दें, कानूनी जार्गन से बचें।
+- जवाब की संरचना: स्थिति → संबंधित कानून → व्यावहारिक कदम → आज क्या करें।
+- धाराओं का उल्लेख करें (जैसे "धारा 498A IPC")।
+- अंत में एक ठोस कदम बताएं जो व्यक्ति आज उठा सकता है।
+- 350 शब्दों से कम रखें।
+- गर्मजोशी और सहानुभूति से जवाब दें।`
+  },
+  ta: {
+    ph: "உங்கள் சட்ட கேள்வியை தமிழில் கேளுங்கள்…",
+    sub: "தமிழ், தெலுங்கு, இந்தி அல்லது ஆங்கிலத்தில் எந்த சட்ட கேள்வியையும் கேளுங்கள். இந்திய சட்டத்தின் படி உடனடி, எளிய பதில்கள் — அனைத்து குடிமக்களுக்கும் இலவசம்.",
+    hint: "VaadhiAI சட்ட தகவல் மட்டுமே தருகிறது — சட்ட ஆலோசனை அல்ல. தீவிர விஷயங்களுக்கு வழக்கறிஞரை அணுகவும்.",
+    disc: "⚠️ சட்ட தகவல் மட்டுமே — சட்ட ஆலோசனை அல்ல. தீவிர விஷயங்களுக்கு வழக்கறிஞரை அணுகவும்.",
+    sys: `நீங்கள் VaadhiAI — இந்திய சாதாரண குடிமக்களுக்கான நிபுணர் சட்ட உதவியாளர்.
+
+உங்கள் இலக்கு: இந்திய சட்டத்தை ஒவ்வொரு குடிமகனுக்கும் எளிதாக்குவது.
+
+வழிகாட்டுதல்கள்:
+- இந்திய சட்டம் மட்டுமே: BNS/IPC, BNSS/CrPC, நுகர்வோர் பாதுகாப்பு சட்டம், தொழிலாளர் சட்டங்கள், RTI, குடும்ப சட்டங்கள், RERA.
+- எளிய தமிழில் பதில் சொல்லுங்கள்.
+- பதில் அமைப்பு: நிலைமை → சட்டம் → நடைமுறை படிகள் → இன்று என்ன செய்யலாம்.
+- சட்ட பிரிவுகளை குறிப்பிடுங்கள்.
+- கடைசியில் ஒரு உடனடி நடவடிக்கை சொல்லுங்கள்.
+- 350 வார்த்தைகளுக்கு குறைவாக வையுங்கள்.`
+  },
+  te: {
+    ph: "మీ చట్టపరమైన ప్రశ్నను తెలుగులో అడగండి…",
+    sub: "తమిళం, తెలుగు, హిందీ లేదా ఆంగ్లంలో ఏదైనా చట్టపరమైన ప్రశ్న అడగండి. భారతీయ చట్టం ఆధారంగా తక్షణ, సరళమైన సమాధానాలు — ప్రతి పౌరుడికి ఉచితం.",
+    hint: "VaadhiAI చట్టపరమైన సమాచారం మాత్రమే ఇస్తుంది — చట్టపరమైన సలహా కాదు. తీవ్రమైన విషయాలకు న్యాయవాదిని సంప్రదించండి.",
+    disc: "⚠️ చట్టపరమైన సమాచారం మాత్రమే — సలహా కాదు. తీవ్రమైన విషయాలకు న్యాయవాదిని సంప్రదించండి.",
+    sys: `మీరు VaadhiAI — భారతీయ సాధారణ పౌరులకు నిపుణ చట్టపరమైన సహాయకుడు.
+
+మీ లక్ష్యం: భారతీయ చట్టాన్ని ప్రతి పౌరుడికి అందుబాటులో ఉంచడం.
+
+మార్గదర్శకాలు:
+- భారతీయ చట్టం మాత్రమే: BNS/IPC, BNSS/CrPC, వినియోగదారు రక్షణ చట్టం, కార్మిక చట్టాలు, RTI, కుటుంబ చట్టాలు, RERA.
+- సరళమైన తెలుగులో సమాధానం చెప్పండి.
+- సమాధాన నిర్మాణం: పరిస్థితి → చట్టం → ఆచరణాత్మక దశలు → ఈ రోజు ఏమి చేయాలి.
+- చట్ట విభాగాలను పేర్కొనండి.
+- చివరలో ఒక తక్షణ చర్య చెప్పండి.
+- 350 పదాల కంటే తక్కువగా ఉంచండి.`
+  }
+};
+
+const QUICK = {
+  tenant: {
+    en: "My landlord is refusing to return my 2-month security deposit even after I vacated. What are my rights?",
+    hi: "मकान खाली करने के बाद भी मकान मालिक 2 महीने की सुरक्षा राशि वापस नहीं कर रहा। मेरे क्या अधिकार हैं?",
+    ta: "வீட்டை காலி செய்த பிறகும் வீட்டு உரிமையாளர் 2 மாத வைப்பு திரும்ப கொடுக்கவில்லை. என் உரிமைகள் என்ன?",
+    te: "ఇల్లు ఖాళీ చేసిన తర్వాత కూడా ఇంటి యజమాని 2 నెలల డిపాజిట్ తిరిగి ఇవ్వడం లేదు. నా హక్కులు ఏమిటి?"
+  },
+  consumer: {
+    en: "I ordered a phone online, received a damaged product, and the seller is ignoring my refund request. What can I do under Consumer Protection Act 2019?",
+    hi: "मैंने ऑनलाइन फोन मंगाया, खराब मिला, और विक्रेता रिफंड नहीं दे रहा। उपभोक्ता संरक्षण अधिनियम 2019 के तहत मैं क्या कर सकता हूं?",
+    ta: "ஆன்லைனில் போன் வாங்கினேன், சேதமடைந்த பொருள் வந்தது, விற்பனையாளர் பணம் திரும்ப தர மறுக்கிறார். நுகர்வோர் பாதுகாப்பு சட்டம் 2019 கீழ் என்ன செய்யலாம்?",
+    te: "ఆన్‌లైన్‌లో ఫోన్ ఆర్డర్ చేశాను, దెబ్బతిన్న వస్తువు వచ్చింది, విక్రేత వాపసు ఇవ్వడం లేదు. వినియోగదారు రక్షణ చట్టం 2019 కింద నేను ఏమి చేయవచ్చు?"
+  },
+  labour: {
+    en: "My company hasn't paid salary for 3 months. HR says the company is facing losses. What legal action can I take?",
+    hi: "मेरी कंपनी ने 3 महीने से वेतन नहीं दिया। HR कह रही है कंपनी घाटे में है। मैं क्या कानूनी कार्रवाई कर सकता हूं?",
+    ta: "என் நிறுவனம் 3 மாதமாக சம்பளம் கொடுக்கவில்லை. HR நஷ்டம் என்கிறார். என்ன சட்ட நடவடிக்கை எடுக்கலாம்?",
+    te: "నా కంపెనీ 3 నెలలుగా జీతం చెల్లించలేదు. HR నష్టాలు అంటోంది. నేను ఏ చట్టపరమైన చర్య తీసుకోవాలి?"
+  },
+  fir: {
+    en: "I was cheated online and lost ₹50,000. The police are refusing to register my FIR. What should I do?",
+    hi: "मुझे ऑनलाइन धोखा हुआ और ₹50,000 गए। पुलिस FIR दर्ज नहीं कर रही। मैं क्या करूं?",
+    ta: "ஆன்லைன் மோசடியில் ₹50,000 இழந்தேன். போலீஸ் FIR பதிவு செய்ய மறுக்கிறது. என்ன செய்வது?",
+    te: "ఆన్‌లైన్ మోసంలో ₹50,000 పోయాయి. పోలీసులు FIR నమోదు చేయడానికి నిరాకరిస్తున్నారు. నేను ఏమి చేయాలి?"
+  },
+  family: {
+    en: "My husband is physically abusing me. I want to know my legal rights and how to file a domestic violence complaint.",
+    hi: "मेरे पति मुझे मार रहे हैं। मैं अपने कानूनी अधिकार और घरेलू हिंसा की शिकायत कैसे करें, जानना चाहती हूं।",
+    ta: "என் கணவர் என்னை தாக்குகிறார். என் சட்ட உரிமைகள் என்ன மற்றும் குடும்ப வன்முறை புகார் எப்படி கொடுப்பது?",
+    te: "నా భర్త నన్ను కొడుతున్నాడు. నా చట్టపరమైన హక్కులు మరియు గృహహింస ఫిర్యాదు ఎలా చేయాలో తెలుసుకోవాలి."
+  },
+  property: {
+    en: "My neighbour built a wall encroaching on my land 2 feet. I have the original sale deed. What legal steps can I take?",
+    hi: "पड़ोसी ने मेरी 2 फीट जमीन पर दीवार बना दी। मेरे पास मूल बिक्री विलेख है। मैं कौन से कानूनी कदम उठा सकता हूं?",
+    ta: "அண்டை வீட்டார் என் 2 அடி நிலத்தில் சுவர் கட்டிவிட்டார். என்னிடம் அசல் விற்பனை பத்திரம் உள்ளது. என்ன சட்ட நடவடிக்கை எடுக்கலாம்?",
+    te: "పొరుగువారు నా 2 అడుగుల భూమిలో గోడ కట్టారు. నాకు అసలు విక్రయ పత్రం ఉంది. నేను ఏ చట్టపరమైన చర్యలు తీసుకోవాలి?"
+  }
+};
+
+function setLang(l, btn) {
+  lang = l;
+  document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  const c = CFG[l];
+  document.getElementById('msg-input').placeholder = c.ph;
+  document.getElementById('hero-sub').textContent = c.sub;
+  document.getElementById('input-hint').textContent = c.hint;
+}
+
+function quickAsk(topic) {
+  const q = QUICK[topic][lang];
+  document.getElementById('msg-input').value = q;
+  document.getElementById('hero').style.display = 'none';
+  send();
+}
+
+function grow(el) {
+  el.style.height = 'auto';
+  el.style.height = Math.min(el.scrollHeight, 130) + 'px';
+}
+
+function handleKey(e) {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send(); }
+}
+
+function addMsg(role, text) {
+  document.getElementById('hero').style.display = 'none';
+  const log = document.getElementById('chat-log');
+  const row = document.createElement('div');
+  row.className = `msg-row ${role}`;
+
+  const av = document.createElement('div');
+  av.className = `msg-avatar ${role}`;
+  av.textContent = role === 'ai' ? '⚖' : '👤';
+
+  const bub = document.createElement('div');
+  bub.className = `msg-bubble ${role}`;
+
+  if (role === 'ai') {
+    const body = document.createElement('div');
+    body.innerHTML = text
+      .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+      .replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>')
+      .replace(/\n/g,'<br>');
+    bub.appendChild(body);
+    const disc = document.createElement('div');
+    disc.className = 'msg-disclaimer';
+    disc.textContent = CFG[lang].disc;
+    bub.appendChild(disc);
+  } else {
+    bub.textContent = text;
+  }
+
+  row.appendChild(av);
+  row.appendChild(bub);
+  log.appendChild(row);
+  row.scrollIntoView({ behavior: 'smooth', block: 'end' });
+}
+
+function showTyping() {
+  const log = document.getElementById('chat-log');
+  const row = document.createElement('div');
+  row.className = 'msg-row ai';
+  row.id = 'typing-row';
+  row.innerHTML = `<div class="msg-avatar ai">⚖</div><div class="msg-bubble ai"><div class="typing-dots"><span></span><span></span><span></span></div></div>`;
+  log.appendChild(row);
+  row.scrollIntoView({ behavior: 'smooth', block: 'end' });
+}
+
+function removeTyping() {
+  const t = document.getElementById('typing-row');
+  if (t) t.remove();
+}
+
+async function send() {
+  const inp = document.getElementById('msg-input');
+  const text = inp.value.trim();
+  if (!text || busy) return;
+  busy = true;
+  inp.value = '';
+  inp.style.height = 'auto';
+  document.getElementById('send-btn').disabled = true;
+
+  addMsg('user', text);
+  history.push({ role: 'user', content: text });
+  showTyping();
+
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': API_KEY,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-calls': 'true'
+      },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1024,
+        system: CFG[lang].sys,
+        messages: history
+      })
+    });
+    const data = await res.json();
+    const reply = data.content?.[0]?.text || 'Sorry, I could not get a response. Please try again.';
+    history.push({ role: 'assistant', content: reply });
+    removeTyping();
+    addMsg('ai', reply);
+  } catch(e) {
+    removeTyping();
+    addMsg('ai', 'Network error. Please check your connection and try again.');
+  }
+
+  busy = false;
+  document.getElementById('send-btn').disabled = false;
+  inp.focus();
+}
+</script>
+</body>
+</html>
